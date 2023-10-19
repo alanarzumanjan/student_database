@@ -10,20 +10,12 @@ int compare(char *s1, char *s2){
         s1++; s2++;
     } return 0;
 }
-struct Person {
-    char name[30];
-    char surname[15];
-    int age;
-    char class[10];
-    int id;
-};
 int scan_maxid(){
     FILE *database = fopen("database.dat","rb+");
     if (database == NULL) {
-        printf("No users in the database.\n");
+        printf("No database.\n");
         return 0;
     }
-
     struct Person person;
     int max_id = 0;
 
@@ -36,28 +28,66 @@ int scan_maxid(){
     fclose(database);
     return max_id;
 }
-void show_user() {
+struct Person {
+    char name[20];
+    char surname[20];
+    int age;
+    char class[10];
+    char average[5];
+    int id;
+};
 
+void show_user() {
     FILE *database = fopen("database.dat", "rb+");
-    if (database == NULL) {
-        printf("No users in the database.\n");
-        return;
-    }
 
     struct Person person;
-
+    int is_empty = 1;
     while (fread(&person, sizeof(struct Person), 1, database)) {
         printf("ID: %d\n", person.id);
         printf("Name: %s\n", person.name);
         printf("Surname: %s\n", person.surname);
         printf("Age: %d\n", person.age);
         printf("Class: %s\n", person.class);
-        printf("\n");
+        printf("Average: %s\n\n", person.average);
+        is_empty = 0;
     }
-    
-    fclose(database);
+    if (is_empty) {
+        printf("No users in the database.\n");
+    }
+    // fclose(database);
+    // printf("Do you want search one person in database?");
+    // char answer[4];
+    // if(compare(answer,"Yes")||compare(answer,"yes")||compare(answer,"YES") == 0){
+    //     search_user();
+    // }
 }
+// void search_user() {
+//     printf("Enter search person name: ");
+//     char name[20];
+//     scanf("%s", name);
 
+//     printf("Enter person surname: ");
+//     char surname[20];
+//     scanf("%s", surname);
+
+//     FILE *database = fopen("database.dat", "rb+");
+//     struct Person person;
+
+//     while (fread(&person, sizeof(struct Person), 1, database)) {
+//         if (compare(person.name, name) == 0 && compare(person.surname, surname) == 0) {
+//             printf("ID: %d\n", person.id);
+//             printf("Name: %s\n", person.name);
+//             printf("Surname: %s\n", person.surname);
+//             printf("Age: %d\n", person.age);
+//             printf("Class: %s\n", person.class);
+//             printf("Average: %s\n\n");
+//             return;
+//         }
+//     }
+
+//     printf("User not found in the database.\n");
+//     fclose(database);
+// }
 void add_user(int max_id) {
 
     FILE *database = fopen("database.dat", "ab+");
@@ -74,6 +104,9 @@ void add_user(int max_id) {
 
     printf("Class: ");
     scanf("%s", person.class);
+
+    printf("Average: ");
+    scanf("%s", person.average);
     person.id = max_id + 1;
 
     fwrite(&person, sizeof(struct Person), 1, database);
@@ -87,7 +120,6 @@ int main() {
 
     do {
         int choice;
-        char answer[4];
         printf("=====================\n");
         printf("What do you want?\n");
         printf("1 - show user\n2 - add user\n3 - delete user\n4 - exit\n");
