@@ -8,7 +8,7 @@ program:
 	$(CC) $(program) -o $(obj_file)
 	./$(obj_file)
 
-add:
+push:
 	git add .
 	git add Makefile
 	git commit -a -m "mama"
