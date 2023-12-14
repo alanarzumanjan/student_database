@@ -32,7 +32,7 @@ void print_person_data(struct Person person) {
 }
 
 int scan_maxid() {
-    FILE *database = fopen("database.dat", "rb+");
+    FILE *database = fopen("database.dat", "rb");
 
     if (database == NULL) {
         printf("No database.\n");
@@ -113,18 +113,108 @@ void show_user() {
     }
 }
 
+int str_len(const char *str) {
+    int len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+
+int to_int(const char *str) {
+    int result = 0;
+    int sign = 1;
+    int i = 0;
+    while (str[i] == ' ') {
+        i++;
+    }
+    if (str[i] == '-') {
+        sign = -1;
+        i++;
+    } else if (str[i] == '+') {
+        i++;
+    }
+    while (str[i] >= '0' && str[i] <= '9') {
+        result = result * 10 + (str[i] - '0');
+        i++;
+    }
+    return result * sign;
+}
+
+bool is_integger(char c) {
+    return (c >= '0' && c <= '9');
+}
+
+int is_valid_age(const char *age_str) {
+    int has_digit = 0;
+    for (int i = 0; age_str[i] != '\0'; i++) {
+        if (!is_integger(age_str[i])) {
+            printf("Invalid character. Please indicate in numbers, example - '7'\n");
+            return 0;
+        } else {
+            has_digit = 1;
+        }
+    }
+
+    if (has_digit) {
+        int age = to_int(age_str);
+        return age > 0;
+    } else {
+        printf("You didn't indicate your age. Please indicate in numbers, example - '7'\n");
+        return 0;
+    }
+}
+
+bool is_valid_char(char c) {
+    return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '-');
+}
+
+bool is_valid_name(const char *name, const char *what) {
+    int str_count = 0;
+
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (is_valid_char(name[i])) {
+            str_count++;
+        } else {
+            printf("The %s is invalid. It should contain only letters and '-'\n", what);
+            return 0;
+        }
+    }
+
+    if (str_count >= 2) {
+        return 1;
+    } else {
+        printf("Invalid %s. It should contain at least two letters.\n", what);
+        return 0;
+    }
+}
+
+
 void add_user(int max_id) {
     FILE *database = fopen("database.dat", "ab");
     struct Person person;
+    printf("If you need to insert spaces, replace them with dashes '-'\nExample: Karlis-Gustavs\n");
 
-    printf("User name: ");
-    scanf("%s", person.name);
+    do {
+        printf("User name: ");
+        scanf("%s", person.name);
+    } while (!is_valid_name(person.name, "name"));
 
-    printf("Surname: ");
-    scanf("%s", person.surname);
+    do {
+        printf("Surname: ");
+        scanf("%s", person.surname);
+    } while (!is_valid_name(person.surname, "surname"));
 
-    printf("Age: ");
-    scanf("%d", &person.age);
+
+    char age_str[10];
+    do {
+        printf("Age: ");
+        scanf("%s", age_str);
+
+        getchar();
+    } while (!is_valid_age(age_str));
+
+    person.age = to_int(age_str);
 
     printf("Class: ");
     scanf("%s", person.class);
@@ -139,12 +229,12 @@ void add_user(int max_id) {
 }
 
 void delete_user(int id_to_delete) {
-    FILE *database = fopen("database.dat", "r+");
-    FILE *temp_database = fopen("temp_database.dat", "w");
+    FILE *database = fopen("database.dat", "rb");
+    FILE *temp_database = fopen("temp_database.dat", "wb");
     struct Person person;
 
     if (database == NULL || temp_database == NULL) {
-        printf("Error: Could not open the database file(s).\n");
+        printf("Error: Could not open the database file.\n");
         return;
     }
 
