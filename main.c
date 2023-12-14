@@ -64,6 +64,7 @@ void search_user() {
     printf("Enter person id, name, surname, age, class, average with spaces.\nIf you don't know, write 0.\nEnter: ");
     int id, age;
     char name[20], surname[20], class[10], average[5];
+    
     scanf("%d %s %s %d %s %s", &id, name, surname, &age, class, average);
     printf("\n");
 
@@ -125,15 +126,18 @@ int to_int(const char *str) {
     int result = 0;
     int sign = 1;
     int i = 0;
+
     while (str[i] == ' ') {
         i++;
     }
+
     if (str[i] == '-') {
         sign = -1;
         i++;
     } else if (str[i] == '+') {
         i++;
     }
+
     while (str[i] >= '0' && str[i] <= '9') {
         result = result * 10 + (str[i] - '0');
         i++;
@@ -171,7 +175,6 @@ bool is_valid_char(char c) {
 
 bool is_valid_name(const char *name, const char *what) {
     int str_count = 0;
-
     for (int i = 0; name[i] != '\0'; i++) {
         if (is_valid_char(name[i])) {
             str_count++;
@@ -189,6 +192,15 @@ bool is_valid_name(const char *name, const char *what) {
     }
 }
 
+int is_valid_average(char *average){
+    int avg = to_int(average);
+    if(avg > 0 && avg <= 10){
+        return 1;
+    } else {
+        printf("The average score can be from 1 to 10\n");
+        return 0;
+    }
+}
 
 void add_user(int max_id) {
     FILE *database = fopen("database.dat", "ab");
@@ -210,17 +222,19 @@ void add_user(int max_id) {
     do {
         printf("Age: ");
         scanf("%s", age_str);
-
-        getchar();
+        
     } while (!is_valid_age(age_str));
-
     person.age = to_int(age_str);
 
     printf("Class: ");
     scanf("%s", person.class);
 
-    printf("Average: ");
-    scanf("%s", person.average);
+    do {
+        printf("Average: ");
+        scanf("%s", person.average);
+        
+    } while (!is_valid_average(person.average));
+    
 
     person.id = max_id + 1;
 
@@ -229,36 +243,55 @@ void add_user(int max_id) {
 }
 
 void delete_user(int id_to_delete) {
-    FILE *database = fopen("database.dat", "rb");
-    FILE *temp_database = fopen("temp_database.dat", "wb");
-    struct Person person;
+    do {
+        FILE *database = fopen("database.dat", "rb");
+        FILE *temp_database = fopen("temp_database.dat", "wb");
+        struct Person person;
 
-    if (database == NULL || temp_database == NULL) {
-        printf("Error: Could not open the database file.\n");
-        return;
-    }
-
-    int found = 0;
-    while (fread(&person, sizeof(struct Person), 1, database)) {
-        if (person.id == id_to_delete) {
-            found = 1;
-        } else {
-            fwrite(&person, sizeof(struct Person), 1, temp_database);
+        if (database == NULL || temp_database == NULL) {
+            printf("Error: Could not open the database file.\n");
+            return;
         }
-    }
 
-    fclose(database);
-    fclose(temp_database);
+        int found = 0;
+        while (fread(&person, sizeof(struct Person), 1, database)) {
+            if (person.id == id_to_delete) {
+                found = 1;
+            } else {
+                fwrite(&person, sizeof(struct Person), 1, temp_database);
+            }
+        }
 
-    if (found) {
-        remove("database.dat");
-        rename("temp_database.dat", "database.dat");
-        printf("User with ID %d has been deleted.\n", id_to_delete);
-    } else {
-        remove("temp_database.dat");
-        printf("User with ID %d not found in the database.\n", id_to_delete);
-    }
+        fclose(database);
+        fclose(temp_database);
+
+        if (found) {
+            remove("database.dat");
+            rename("temp_database.dat", "database.dat");
+            printf("User with ID %d has been deleted.\n", id_to_delete);
+        } else {
+            remove("temp_database.dat");
+            printf("User with ID %d not found in the database.\n\n", id_to_delete);
+        }
+
+        int choice;
+        do {
+            printf("Do you want to delete another person?");
+            printf("\n1 - Delete another person\n2 - No\nYour choice: ");
+            scanf("%d", &choice);
+
+            if (choice != 1 && choice != 2) {
+                printf("Please enter a valid choice.\n");
+            }
+        } while (choice != 1 && choice != 2);
+
+        if (choice == 2) {
+            break;
+        }
+
+    } while (1);
 }
+
 
 int main() {
     int max_id;
@@ -285,6 +318,7 @@ int main() {
                 printf("Enter user_id to delete: ");
                 int to_delete;
                 scanf("%d", &to_delete);
+                
                 delete_user(to_delete);
                 break;
             case 4:
