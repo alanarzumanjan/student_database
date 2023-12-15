@@ -168,13 +168,16 @@ int is_valid_age(const char *age_str) {
         if (!is_integger(age_str[i])) {
             printf("Invalid character. Please indicate in numbers, example - '7'\n");
             return 0;
-        } else {
+        } 
+        else {
             has_digit = 1;
         }
     }
-
+    int age = to_int(age_str);
+    if (age < 1 || age > 140){
+        printf("Age cannot be less than 1 or more than 140. Enter again!\n");
+    }
     if (has_digit) {
-        int age = to_int(age_str);
         return age > 0;
     } else {
         printf("You didn't indicate your age. Please indicate in numbers, example - '7'\n");
@@ -344,5 +347,5 @@ int main() {
 
     return 0;
 }
-// gcc main.c -o main.c
-// /.main.o
+// make
+// make push
