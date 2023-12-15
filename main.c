@@ -98,20 +98,33 @@ void show_user() {
         print_person_data(person);
         is_empty = 0;
     }
-
+    printf("All database ⬆⬆⬆\n");
     fclose(database);
 
     if (is_empty) {
         printf("No users in the database.\n");
     }
+    int flag = 0;
+    
+    do{
+        printf("Do you want to search for a person in the database?\n1.Yes\n2.No\nEnter number: ");
+        char answer[4];
+        scanf("%s", answer);
 
-    printf("Do you want to search for a person in the database?\n 1.Yes\n2.No\nEnter number: ");
-    char answer[4];
-    scanf("%s", answer);
-
-    if (compare(answer, "1") == 0) {
-        search_user();
-    }
+        if (compare(answer, "1") == 0) {
+            search_user();
+            flag = 0;
+        } 
+        else if(compare(answer,"2") == 0){
+            flag = 0;
+        }
+        else{
+            printf("\nInvalid choice, please enter 1 or 2\n");
+            flag = 1;
+            
+        }
+    }while(flag == 1);
+    
 }
 
 int str_len(const char *str) {
