@@ -1,20 +1,22 @@
-program_name=main
-obj_file=$(program_name).o
-program=$(program_name).c
+TARGET=main
+
+obj_file=$(TARGET).o
+compile=$(TARGET).c
+
 CC=gcc
 CFLAGS=-lm
 
-program:
-	$(CC) $(program) -o $(obj_file)
+compile:
+	$(CC) $(compile) -o $(obj_file)
 	./$(obj_file)
+
+.PHONY: clean all
+
+clean:
+	rm -f *.o
 
 push:
 	git add .
 	git add Makefile
 	git commit -a -m "mama"
 	git push
-
-.PHONY: clean all
-
-clean:
-	rm -f *.o

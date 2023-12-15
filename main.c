@@ -242,11 +242,14 @@ void add_user(int max_id) {
     fclose(database);
 }
 
-void delete_user(int id_to_delete) {
+void delete_user() {
     do {
         FILE *database = fopen("database.dat", "rb");
         FILE *temp_database = fopen("temp_database.dat", "wb");
         struct Person person;
+        printf("Enter user_id to delete: ");
+        int id_to_delete;
+        scanf("%d", &id_to_delete);
 
         if (database == NULL || temp_database == NULL) {
             printf("Error: Could not open the database file.\n");
@@ -313,13 +316,11 @@ int main() {
             case 2:
                 max_id = scan_maxid();
                 add_user(max_id);
+
                 break;
             case 3:
-                printf("Enter user_id to delete: ");
-                int to_delete;
-                scanf("%d", &to_delete);
-                
-                delete_user(to_delete);
+                delete_user();
+
                 break;
             case 4:
                 flag = false;
