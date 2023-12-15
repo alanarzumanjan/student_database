@@ -276,7 +276,7 @@ void delete_user() {
             remove("temp_database.dat");
             printf("User with ID %d not found in the database.\n\n", id_to_delete);
         }   
-
+        
         int choice;
         do {
             printf("Do you want to delete another person?");
