@@ -14,9 +14,3 @@ compile:
 
 clean:
 	rm -f *.o
-
-push:
-	git add .
-	git add Makefile
-	git commit -a -m "mama"
-	git push
