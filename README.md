@@ -28,5 +28,9 @@ This is a simple console-based application written in C that allows users to man
 ## 🚀 How to Run
 
 ```bash
-    make || gcc main.c -o main.o
-./main.o
+    make
+```
+OR
+```bash
+    gcc main.c -o main.o
+    ./main.o
