@@ -1,10 +1,10 @@
-# 🗂️ Student Database System (C Project)
+# Student Database System (C Project)
 
 This is a simple console-based application written in C that allows users to manage a database of students. It supports adding, viewing, searching, and deleting students, with manual input validation and basic file-based persistence (`fread`/`fwrite`).
 
 ---
 
-## 💡 Features
+## Features
 
 - Add new student records with validation  
 - View all students in the database  
@@ -15,7 +15,7 @@ This is a simple console-based application written in C that allows users to man
 
 ---
 
-## 🧠 Technologies Used
+## Technologies Used
 
 - **Language:** C  
 - **Storage:** Binary file (`database.dat`)  
@@ -25,7 +25,7 @@ This is a simple console-based application written in C that allows users to man
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 ```bash
     make
